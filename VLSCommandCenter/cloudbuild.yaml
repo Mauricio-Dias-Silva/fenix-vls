@@ -1,0 +1,26 @@
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/fenix-vls:$COMMIT_SHA', '.']
+    dir: 'VLSCommandCenter'
+
+  # Push image to Artifact Registry / Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/fenix-vls:$COMMIT_SHA']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'fenix-vls'
+      - '--image=gcr.io/$PROJECT_ID/fenix-vls:$COMMIT_SHA'
+      - '--region=us-central1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--port=8080'
+      - '--set-env-vars=VLS_SECRET_TOKEN=fenix-vls-secret-alpha-token,DJANGO_SETTINGS_MODULE=VLSCommandCenter.settings'
+
+images:
+  - 'gcr.io/$PROJECT_ID/fenix-vls:$COMMIT_SHA'

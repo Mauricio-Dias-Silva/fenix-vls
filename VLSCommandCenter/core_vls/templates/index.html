@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Sovereign Command - VLS</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/vls_style.css' %}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="background-matrix"></div>
+    <div class="container glass-panel">
+
+        <header>
+            <h1>AURA SOVEREIGN COMMAND</h1>
+            <p>Fênix VLS - Telemetria Orbital</p>
+        </header>
+
+        <main class="dashboard">
+            <!-- Quantum Drive Panel -->
+            <section class="panel drive-panel">
+                <h2>Quantum Inertial Drive (QID)</h2>
+
+                <div class="metric">
+                    <span class="label">Drive Status:</span>
+                    <span id="drive-status" class="value status-offline">STANDBY</span>
+                </div>
+
+                <div class="metric">
+                    <span class="label">Neural Coherence:</span>
+                    <span id="drive-coherence" class="value">0.00 %</span>
+                </div>
+
+                <div class="metric">
+                    <span class="label">Thrust Vector (kN):</span>
+                    <span id="drive-thrust" class="value thrust-text">0.00</span>
+                </div>
+
+                <div class="control-group">
+                    <label for="focus-slider">Operator Neural Lock (%)</label>
+                    <input type="range" id="focus-slider" min="0" max="100" value="0">
+                    <span id="focus-display" class="glow-text">0%</span>
+                </div>
+            </section>
+
+            <!-- Airframe Panel -->
+            <section class="panel airframe-panel">
+                <h2>Airframe Resonance Chassis</h2>
+
+                <div class="metric">
+                    <span class="label">Structural Integrity:</span>
+                    <span id="frame-integrity" class="value integrity-good">100.00 %</span>
+                </div>
+
+                <div class="metric">
+                    <span class="label">Matrix Density:</span>
+                    <span id="frame-material" class="value">CFRP_SOLID</span>
+                </div>
+
+                <div class="metric">
+                    <span class="label">Active Stealth (RAM):</span>
+                    <span id="frame-stealth" class="value stealth-off">INACTIVE</span>
+                </div>
+
+                <div class="control-group buttons">
+                    <button id="btn-violet-fire" class="btn btn-primary">Engage High-Freq Field (RAM Stealth)</button>
+                    <button id="btn-dense" class="btn btn-secondary">Engage Base State (Rigid CFRP)</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="connection-status">
+                Telemetry Link: <span id="link-status" class="online">ESTABLISHED</span>
+            </div>
+            <div class="aura-sig">Codex IA System</div>
+        </footer>
+    </div>
+
+    <script src="{% static 'js/app.js' %}"></script>
+</body>
+
+</html>

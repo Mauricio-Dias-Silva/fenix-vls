@@ -1,0 +1,15 @@
+runtime: python311
+
+instance_class: F2
+
+entrypoint: gunicorn --bind 0.0.0.0:$PORT --workers 2 --timeout 120 VLSCommandCenter.wsgi:application
+
+env_variables:
+  DJANGO_SETTINGS_MODULE: "VLSCommandCenter.settings"
+  PYTHONPATH: "/app"
+  VLS_SECRET_TOKEN: "fenix-vls-secret-alpha-token"
+
+automatic_scaling:
+  min_instances: 1
+  max_instances: 3
+  target_cpu_utilization: 0.65
