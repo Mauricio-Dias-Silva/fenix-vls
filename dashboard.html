@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fênix VLS | Telemetry Dashboard</title>
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts for premium typography -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #34d399;
+            --accent-red: #fb7185;
+            --accent-purple: #c084fc;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(192, 132, 252, 0.05), transparent 25%);
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 24px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.8);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-area h1 {
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            font-size: 1.8rem;
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+        }
+
+        .logo-area p {
+            margin: 4px 0 0 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .btn {
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            background-color: transparent;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+        }
+
+        .btn:hover {
+            background-color: var(--accent-blue);
+            color: var(--bg-dark);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+        }
+
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .dashboard-container {
+            padding: 32px 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, var(--accent-blue), transparent);
+            opacity: 0.5;
+        }
+
+        .card.wide {
+            grid-column: 1 / -1;
+        }
+
+        .card h2 {
+            margin: 0 0 20px 0;
+            font-size: 1.2rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        /* Status Grid */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+            grid-column: 1 / -1;
+        }
+
+        .status-box {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .status-box h3 {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-box .value {
+            margin: 10px 0 0 0;
+            font-size: 2rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+        }
+
+        .value.safe {
+            color: var(--accent-green);
+        }
+
+        .value.warn {
+            color: #fbbf24;
+        }
+
+        .value.danger {
+            color: var(--accent-red);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo-area">
+            <h1>FÊNIX VLS</h1>
+            <p>UNIVESP IC - ZERO-POINT TELEMETRY DASHBOARD</p>
+        </div>
+        <div class="controls">
+            <div class="upload-btn-wrapper">
+                <button class="btn">Load JSON Report</button>
+                <input type="file" id="jsonUpload" accept=".json" />
+            </div>
+        </div>
+    </header>
+
+    <div id="initial-message" style="text-align: center; margin-top: 100px; color: var(--text-muted);">
+        <h2>Esperando Dados de Telemetria...</h2>
+        <p>Faça o upload do arquivo <code>.json</code> gerado pelo Physics Engine VLS.</p>
+    </div>
+
+    <div class="dashboard-container hidden" id="dashboard">
+
+        <div class="status-grid">
+            <div class="status-box">
+                <h3>Voo Duração</h3>
+                <div class="value" id="val-time">0.0s</div>
+            </div>
+            <div class="status-box">
+                <h3>G-Force Máxima</h3>
+                <div class="value" id="val-gforce">1.0G</div>
+            </div>
+            <div class="status-box">
+                <h3>Altitude Máxima</h3>
+                <div class="value safe" id="val-alt">0.0m</div>
+            </div>
+            <div class="status-box">
+                <h3>Status do Paraquedas</h3>
+                <div class="value safe" id="val-parachute">SELDOM</div>
+            </div>
+        </div>
+
+        <div class="card wide">
+            <h2>🌍 Perfil de Voo (Altitude & Velocidade)</h2>
+            <div class="chart-container">
+                <canvas id="flightProfileChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🔥 Dinâmica de Motores (Empuxo & Inércia)</h2>
+            <div class="chart-container">
+                <canvas id="thrustChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🧠 Esforço Estrutural (G-Force & Drag)</h2>
+            <div class="chart-container">
+                <canvas id="stressChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Chart Instances
+        let flightChart, thrustChart, stressChart;
+
+        // Common Chart Defaults
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.font.family = 'Inter';
+
+        document.getElementById('jsonUpload').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    processTelemetryData(data);
+                } catch (error) {
+                    alert("Erro ao ler o JSON: " + error.message);
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        function processTelemetryData(data) {
+            // Hide initial message, show dashboard
+            document.getElementById('initial-message').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+
+            // Extraction arrays
+            const labels = [];
+            const altitudes = [];
+            const velocities = [];
+            const requestedThrusts = [];
+            const actualThrusts = [];
+            const gForces = [];
+            const drags = [];
+            const parachuteColors = []; // To highlight parachute deployment
+
+            let maxG = 0;
+            let maxAlt = 0;
+            let parachuteDeployed = false;
+            let deployIndex = -1;
+
+            data.forEach((row, i) => {
+                const t = (i * 0.1).toFixed(1); // Assuming 0.1s dt
+                labels.push(`${t}s`);
+
+                altitudes.push(row.altitude);
+                velocities.push(row.velocity);
+
+                // Fallback for older JSONs that only had 'thrust_N'
+                requestedThrusts.push(row.requested_thrust_N || row.thrust_N);
+                actualThrusts.push(row.actual_thrust_N || row.thrust_N);
+
+                gForces.push(row.G_force);
+                drags.push(Math.abs(row.drag_N)); // Use absolute drag for chart
+
+                if (Math.abs(row.G_force) > maxG) maxG = Math.abs(row.G_force);
+                if (row.altitude > maxAlt) maxAlt = row.altitude;
+
+                // Parachute tracking (red background if active)
+                if (row.parachute) {
+                    parachuteDeployed = true;
+                    if (deployIndex === -1) deployIndex = i * 0.1;
+                }
+            });
+
+            // Update Summary Stats
+            document.getElementById('val-time').innerText = `${(data.length * 0.1).toFixed(1)}s`;
+
+            const gForceEl = document.getElementById('val-gforce');
+            gForceEl.innerText = `${maxG.toFixed(1)}G`;
+            gForceEl.className = `value ${maxG > 2.0 ? 'danger' : (maxG > 1.5 ? 'warn' : 'safe')}`;
+
+            document.getElementById('val-alt').innerText = `${maxAlt.toFixed(1)}m`;
+
+            const paraEl = document.getElementById('val-parachute');
+            if (parachuteDeployed) {
+                paraEl.innerText = `DEPLOYED (T+${deployIndex.toFixed(1)}s)`;
+                paraEl.className = 'value warn'; // Indicates emergency
+            } else {
+                paraEl.innerText = `ARMED & SAFE`;
+                paraEl.className = 'value safe';
+            }
+
+            // Render Charts
+            buildFlightChart(labels, altitudes, velocities);
+            buildThrustChart(labels, requestedThrusts, actualThrusts);
+            buildStressChart(labels, gForces, drags);
+        }
+
+        function createGradient(ctx, colorStart, colorEnd) {
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, colorStart);
+            gradient.addColorStop(1, colorEnd);
+            return gradient;
+        }
+
+        function buildFlightChart(labels, altitudes, velocities) {
+            if (flightChart) flightChart.destroy();
+            const ctx = document.getElementById('flightProfileChart').getContext('2d');
+
+            flightChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Altitude (m)',
+                            data: altitudes,
+                            borderColor: '#38bdf8', // accent-blue
+                            backgroundColor: createGradient(ctx, 'rgba(56, 189, 248, 0.4)', 'rgba(56, 189, 248, 0.0)'),
+                            borderWidth: 3,
+                            pointRadius: 0,
+                            fill: true,
+                            tension: 0.4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Velocidade (m/s)',
+                            data: velocities,
+                            borderColor: '#c084fc', // accent-purple
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            borderDash: [5, 5],
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    scales: {
+                        x: { grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+                        y: {
+                            type: 'linear', display: true, position: 'left',
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            title: { display: true, text: 'Metros' }
+                        },
+                        y1: {
+                            type: 'linear', display: true, position: 'right',
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: 'm/s' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function buildThrustChart(labels, requested, actual) {
+            if (thrustChart) thrustChart.destroy();
+            const ctx = document.getElementById('thrustChart').getContext('2d');
+
+            thrustChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'PID Requisitado (N)',
+                            data: requested,
+                            borderColor: 'rgba(148, 163, 184, 0.5)',
+                            borderWidth: 2,
+                            borderDash: [3, 3],
+                            pointRadius: 0,
+                            stepped: 'middle'
+                        },
+                        {
+                            label: 'Real Engine Thrust (N)',
+                            data: actual,
+                            borderColor: '#fb7185', // accent-red
+                            backgroundColor: createGradient(ctx, 'rgba(251, 113, 133, 0.4)', 'rgba(251, 113, 133, 0.0)'),
+                            borderWidth: 3,
+                            pointRadius: 0,
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.raw} N` } }
+                    },
+                    scales: {
+                        x: { grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            title: { display: true, text: 'Newtons (N)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function buildStressChart(labels, gForce, drag) {
+            if (stressChart) stressChart.destroy();
+            const ctx = document.getElementById('stressChart').getContext('2d');
+
+            stressChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'G-Force',
+                            data: gForce,
+                            borderColor: '#34d399', // accent-green
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            tension: 0.4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Drag Aerodinâmico (N)',
+                            data: drag,
+                            borderColor: '#eab308', // yellow
+                            backgroundColor: 'rgba(234, 179, 8, 0.1)',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            fill: true,
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    scales: {
+                        x: { grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+                        y: {
+                            type: 'linear', display: true, position: 'left',
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            title: { display: true, text: 'G' }
+                        },
+                        y1: {
+                            type: 'linear', display: true, position: 'right',
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: 'Drag (N)' }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

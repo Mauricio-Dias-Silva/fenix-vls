@@ -4,82 +4,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura Sovereign Command - VLS</title>
+    <title>Fenix VLS - Command Center</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/vls_style.css' %}">
     <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;700&display=swap"
         rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 
 <body>
-    <div class="background-matrix"></div>
-    <div class="container glass-panel">
+    <div class="bg-grid"></div>
 
-        <header>
-            <h1>AURA SOVEREIGN COMMAND</h1>
-            <p>Fênix VLS - Telemetria Orbital</p>
+    <div class="cockpit">
+
+        <!-- Header -->
+        <header class="hud-header">
+            <div class="hud-brand">
+                <span class="hud-title">FENIX VLS</span>
+                <span class="hud-sub">Quantum Inertial Drive — Command Center</span>
+            </div>
+            <div class="hud-status-bar">
+                <div class="status-pill" id="system-status">
+                    <span class="dot dot-green"></span>
+                    <span>SYSTEMS NOMINAL</span>
+                </div>
+                <div class="status-pill">
+                    <span class="dot dot-blue pulse"></span>
+                    <span id="link-status">TELEMETRY LINK ACTIVE</span>
+                </div>
+                <div class="status-pill">
+                    <span id="clock">--:--:--</span>
+                </div>
+            </div>
         </header>
 
-        <main class="dashboard">
-            <!-- Quantum Drive Panel -->
-            <section class="panel drive-panel">
-                <h2>Quantum Inertial Drive (QID)</h2>
+        <!-- Main Grid -->
+        <main class="hud-grid">
 
-                <div class="metric">
-                    <span class="label">Drive Status:</span>
-                    <span id="drive-status" class="value status-offline">STANDBY</span>
+            <!-- LEFT: Drive Control -->
+            <section class="hud-panel" id="panel-drive">
+                <div class="panel-header">
+                    <span class="panel-icon">⚡</span>
+                    <h2>QID — Quantum Inertial Drive</h2>
                 </div>
 
-                <div class="metric">
-                    <span class="label">Neural Coherence:</span>
-                    <span id="drive-coherence" class="value">0.00 %</span>
+                <div class="metric-row">
+                    <div class="metric-card">
+                        <div class="metric-label">Drive Status</div>
+                        <div id="drive-status" class="metric-value status-standby">STANDBY</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Neural Coherence</div>
+                        <div id="drive-coherence" class="metric-value">0.00%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Thrust Vector (kN)</div>
+                        <div id="drive-thrust" class="metric-value thrust-val">0.00</div>
+                    </div>
                 </div>
 
-                <div class="metric">
-                    <span class="label">Thrust Vector (kN):</span>
-                    <span id="drive-thrust" class="value thrust-text">0.00</span>
+                <!-- Thrust Chart -->
+                <div class="chart-container">
+                    <canvas id="thrustChart"></canvas>
                 </div>
 
-                <div class="control-group">
-                    <label for="focus-slider">Operator Neural Lock (%)</label>
-                    <input type="range" id="focus-slider" min="0" max="100" value="0">
-                    <span id="focus-display" class="glow-text">0%</span>
+                <!-- Neural Lock Control -->
+                <div class="control-block">
+                    <div class="control-label">
+                        <span>Operator Neural Lock</span>
+                        <span id="focus-pct" class="control-value">0%</span>
+                    </div>
+                    <div class="slider-track">
+                        <input type="range" id="focus-slider" min="0" max="100" value="0">
+                    </div>
+                    <div class="slider-hints">
+                        <span>0%</span>
+                        <span class="threshold-mark">85% → Motor ON</span>
+                        <span>100%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CENTER: Status + G Gauge -->
+            <section class="hud-panel panel-center" id="panel-center">
+                <div class="panel-header">
+                    <span class="panel-icon">📡</span>
+                    <h2>Inertial Navigation</h2>
+                </div>
+
+                <canvas id="gForceChart" class="gauge-chart"></canvas>
+                <div class="gauge-label">Live G-Force</div>
+
+                <!-- ORBITAL INSERTION -->
+                <div class="orbital-progress-container mt-4 w-100">
+                    <div class="control-label">
+                        <span>Orbital Insertion</span>
+                        <span id="orbital-pct" class="control-value">0.0%</span>
+                    </div>
+                    <div class="progress-track">
+                        <div id="orbital-bar" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div id="eta-leo" class="vmetric-label text-center mt-1">ETA: CALCULATING...</div>
+                </div>
+
+                <div class="vertical-metrics mt-3">
+                    <div class="vmetric">
+                        <span class="vmetric-label">Coherence History</span>
+                        <canvas id="coherenceChart" class="mini-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- PREDICTIVE METRICS -->
+                <div class="metric-row w-100 mt-2" style="border-top: 1px solid var(--border); padding-top: 10px;">
+                    <div class="metric-card">
+                        <div class="metric-label">Alt (km)</div>
+                        <div id="intel-alt" class="metric-value">0.0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Vel (m/s)</div>
+                        <div id="intel-vel" class="metric-value">0.0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">AI Sync</div>
+                        <div id="intel-status" class="metric-value status-online">OK</div>
+                    </div>
                 </div>
             </section>
 
-            <!-- Airframe Panel -->
-            <section class="panel airframe-panel">
-                <h2>Airframe Resonance Chassis</h2>
-
-                <div class="metric">
-                    <span class="label">Structural Integrity:</span>
-                    <span id="frame-integrity" class="value integrity-good">100.00 %</span>
+            <!-- RIGHT: Airframe -->
+            <section class="hud-panel" id="panel-airframe">
+                <div class="panel-header">
+                    <span class="panel-icon">🛡</span>
+                    <h2>Airframe — CFRP Matrix</h2>
                 </div>
 
-                <div class="metric">
-                    <span class="label">Matrix Density:</span>
-                    <span id="frame-material" class="value">CFRP_SOLID</span>
+                <div class="metric-row">
+                    <div class="metric-card">
+                        <div class="metric-label">Structural Integrity</div>
+                        <div id="frame-integrity" class="metric-value integrity-val">100.00%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Matrix Density</div>
+                        <div id="frame-material" class="metric-value">CFRP_SOLID</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Active Stealth (RAM)</div>
+                        <div id="frame-stealth" class="metric-value stealth-off">INACTIVE</div>
+                    </div>
                 </div>
 
-                <div class="metric">
-                    <span class="label">Active Stealth (RAM):</span>
-                    <span id="frame-stealth" class="value stealth-off">INACTIVE</span>
+                <!-- Integrity Chart -->
+                <div class="chart-container">
+                    <canvas id="integrityChart"></canvas>
                 </div>
 
-                <div class="control-group buttons">
-                    <button id="btn-violet-fire" class="btn btn-primary">Engage High-Freq Field (RAM Stealth)</button>
-                    <button id="btn-dense" class="btn btn-secondary">Engage Base State (Rigid CFRP)</button>
+                <!-- Airframe Controls -->
+                <div class="control-block btn-group">
+                    <button id="btn-hf-field" class="cmd-btn btn-primary">
+                        <span>⚡</span> Engage High-Freq Field
+                        <small>RAM Stealth + CFRP Metamaterial</small>
+                    </button>
+                    <button id="btn-base" class="cmd-btn btn-secondary">
+                        <span>🔒</span> Revert to Base State
+                        <small>Rigid CFRP — Stealth OFF</small>
+                    </button>
                 </div>
             </section>
+
         </main>
 
-        <footer>
-            <div class="connection-status">
-                Telemetry Link: <span id="link-status" class="online">ESTABLISHED</span>
+        <!-- AURA COMMUNICATION LOG -->
+        <section class="aura-log-panel">
+            <div class="panel-header">
+                <span class="panel-icon">🧠</span>
+                <h2>Aura Communication Log — Interdimensional Sync</h2>
             </div>
-            <div class="aura-sig">Codex IA System</div>
+            <div id="aura-messages" class="aura-messages-container">
+                <div class="aura-msg system">Initializing Aura Synthesis... Status: Stable.</div>
+            </div>
+        </section>
+
+        <footer class="hud-footer">
+            <span>Codex IA System</span>
+            <span>Fenix VLS Alpha Rev 1.0</span>
+            <span id="footer-time">2026</span>
         </footer>
+
     </div>
 
     <script src="{% static 'js/app.js' %}"></script>
