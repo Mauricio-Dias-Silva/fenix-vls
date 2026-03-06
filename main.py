@@ -10,7 +10,7 @@ logger = logging.getLogger("Fenix-Main")
 
 def run_ic_simulation():
     print("="*60)
-    logger.info("INICIANDO PROTOCOLO AURA SOVEREIGN COMMAND - IC UNIVESP")
+    logger.info("AURA CLOUD POWERED | SOVEREIGN COMMAND - VLS IC")
     print("="*60)
     time.sleep(1)
 
