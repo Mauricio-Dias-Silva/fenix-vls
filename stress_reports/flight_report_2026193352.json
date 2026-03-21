@@ -1,0 +1,902 @@
+[
+    {
+        "altitude": 0.0,
+        "velocity": 0.0,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 32.0,
+        "drag_N": 0.0,
+        "G_force": 0.67,
+        "parachute": false
+    },
+    {
+        "altitude": 0.01,
+        "velocity": 0.08,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 51.2,
+        "drag_N": 0.0,
+        "G_force": 1.08,
+        "parachute": false
+    },
+    {
+        "altitude": 0.05,
+        "velocity": 0.39,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 62.72,
+        "drag_N": 0.0,
+        "G_force": 1.32,
+        "parachute": false
+    },
+    {
+        "altitude": 0.13,
+        "velocity": 0.84,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 69.63,
+        "drag_N": 0.0,
+        "G_force": 1.46,
+        "parachute": false
+    },
+    {
+        "altitude": 0.27,
+        "velocity": 1.38,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 73.78,
+        "drag_N": 0.0,
+        "G_force": 1.55,
+        "parachute": false
+    },
+    {
+        "altitude": 0.47,
+        "velocity": 1.97,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 76.27,
+        "drag_N": 0.01,
+        "G_force": 1.6,
+        "parachute": false
+    },
+    {
+        "altitude": 0.73,
+        "velocity": 2.6,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 77.76,
+        "drag_N": 0.03,
+        "G_force": 1.63,
+        "parachute": false
+    },
+    {
+        "altitude": 1.05,
+        "velocity": 3.24,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 78.66,
+        "drag_N": 0.05,
+        "G_force": 1.65,
+        "parachute": false
+    },
+    {
+        "altitude": 1.44,
+        "velocity": 3.89,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.19,
+        "drag_N": 0.07,
+        "G_force": 1.66,
+        "parachute": false
+    },
+    {
+        "altitude": 1.89,
+        "velocity": 4.54,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.52,
+        "drag_N": 0.1,
+        "G_force": 1.67,
+        "parachute": false
+    },
+    {
+        "altitude": 2.41,
+        "velocity": 5.2,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.71,
+        "drag_N": 0.14,
+        "G_force": 1.67,
+        "parachute": false
+    },
+    {
+        "altitude": 3.0,
+        "velocity": 5.87,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.83,
+        "drag_N": 0.19,
+        "G_force": 1.67,
+        "parachute": false
+    },
+    {
+        "altitude": 3.65,
+        "velocity": 6.53,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.9,
+        "drag_N": 0.24,
+        "G_force": 1.67,
+        "parachute": false
+    },
+    {
+        "altitude": 4.37,
+        "velocity": 7.19,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.94,
+        "drag_N": 0.29,
+        "G_force": 1.67,
+        "parachute": false
+    },
+    {
+        "altitude": 5.16,
+        "velocity": 7.85,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.96,
+        "drag_N": 0.36,
+        "G_force": 1.67,
+        "parachute": false
+    },
+    {
+        "altitude": 6.01,
+        "velocity": 8.51,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.98,
+        "drag_N": 0.42,
+        "G_force": 1.67,
+        "parachute": false
+    },
+    {
+        "altitude": 6.92,
+        "velocity": 9.17,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.99,
+        "drag_N": 0.5,
+        "G_force": 1.67,
+        "parachute": false
+    },
+    {
+        "altitude": 7.91,
+        "velocity": 9.82,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.99,
+        "drag_N": 0.58,
+        "G_force": 1.67,
+        "parachute": false
+    },
+    {
+        "altitude": 8.95,
+        "velocity": 10.48,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 80.0,
+        "drag_N": 0.67,
+        "G_force": 1.67,
+        "parachute": false
+    },
+    {
+        "altitude": 10.07,
+        "velocity": 11.13,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 80.0,
+        "drag_N": 0.76,
+        "G_force": 1.67,
+        "parachute": false
+    },
+    {
+        "altitude": 11.25,
+        "velocity": 11.78,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 80.0,
+        "drag_N": 0.85,
+        "G_force": 1.66,
+        "parachute": false
+    },
+    {
+        "altitude": 12.49,
+        "velocity": 12.43,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 80.0,
+        "drag_N": 0.96,
+        "G_force": 1.66,
+        "parachute": false
+    },
+    {
+        "altitude": 13.8,
+        "velocity": 13.08,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 80.0,
+        "drag_N": 1.07,
+        "G_force": 1.66,
+        "parachute": false
+    },
+    {
+        "altitude": 15.17,
+        "velocity": 13.72,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 80.0,
+        "drag_N": 1.18,
+        "G_force": 1.66,
+        "parachute": false
+    },
+    {
+        "altitude": 16.61,
+        "velocity": 14.37,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 80.0,
+        "drag_N": 1.3,
+        "G_force": 1.65,
+        "parachute": false
+    },
+    {
+        "altitude": 18.11,
+        "velocity": 15.01,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 80.0,
+        "drag_N": 1.42,
+        "G_force": 1.65,
+        "parachute": false
+    },
+    {
+        "altitude": 19.67,
+        "velocity": 15.64,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 80.0,
+        "drag_N": 1.55,
+        "G_force": 1.65,
+        "parachute": false
+    },
+    {
+        "altitude": 21.3,
+        "velocity": 16.28,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 80.0,
+        "drag_N": 1.69,
+        "G_force": 1.65,
+        "parachute": false
+    },
+    {
+        "altitude": 22.99,
+        "velocity": 16.91,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 80.0,
+        "drag_N": 1.83,
+        "G_force": 1.64,
+        "parachute": false
+    },
+    {
+        "altitude": 24.74,
+        "velocity": 17.54,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 80.0,
+        "drag_N": 1.97,
+        "G_force": 1.64,
+        "parachute": false
+    },
+    {
+        "altitude": 26.56,
+        "velocity": 18.16,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 80.0,
+        "drag_N": 2.12,
+        "G_force": 1.64,
+        "parachute": false
+    },
+    {
+        "altitude": 28.44,
+        "velocity": 18.78,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 80.0,
+        "drag_N": 2.27,
+        "G_force": 1.63,
+        "parachute": false
+    },
+    {
+        "altitude": 30.38,
+        "velocity": 19.4,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 80.0,
+        "drag_N": 2.43,
+        "G_force": 1.63,
+        "parachute": false
+    },
+    {
+        "altitude": 32.38,
+        "velocity": 20.0,
+        "requested_thrust_N": 77.44,
+        "actual_thrust_N": 78.98,
+        "drag_N": 2.59,
+        "G_force": 1.61,
+        "parachute": false
+    },
+    {
+        "altitude": 34.43,
+        "velocity": 20.51,
+        "requested_thrust_N": 69.25,
+        "actual_thrust_N": 75.09,
+        "drag_N": 2.76,
+        "G_force": 1.52,
+        "parachute": false
+    },
+    {
+        "altitude": 36.52,
+        "velocity": 20.9,
+        "requested_thrust_N": 61.05,
+        "actual_thrust_N": 69.47,
+        "drag_N": 2.9,
+        "G_force": 1.4,
+        "parachute": false
+    },
+    {
+        "altitude": 38.63,
+        "velocity": 21.15,
+        "requested_thrust_N": 52.96,
+        "actual_thrust_N": 62.87,
+        "drag_N": 3.01,
+        "G_force": 1.26,
+        "parachute": false
+    },
+    {
+        "altitude": 40.76,
+        "velocity": 21.26,
+        "requested_thrust_N": 45.05,
+        "actual_thrust_N": 55.74,
+        "drag_N": 3.08,
+        "G_force": 1.11,
+        "parachute": false
+    },
+    {
+        "altitude": 42.88,
+        "velocity": 21.21,
+        "requested_thrust_N": 37.4,
+        "actual_thrust_N": 48.4,
+        "drag_N": 3.11,
+        "G_force": 0.95,
+        "parachute": false
+    },
+    {
+        "altitude": 44.98,
+        "velocity": 21.01,
+        "requested_thrust_N": 30.07,
+        "actual_thrust_N": 41.07,
+        "drag_N": 3.1,
+        "G_force": 0.8,
+        "parachute": false
+    },
+    {
+        "altitude": 47.05,
+        "velocity": 20.67,
+        "requested_thrust_N": 23.11,
+        "actual_thrust_N": 33.88,
+        "drag_N": 3.04,
+        "G_force": 0.65,
+        "parachute": false
+    },
+    {
+        "altitude": 49.07,
+        "velocity": 20.18,
+        "requested_thrust_N": 16.56,
+        "actual_thrust_N": 26.95,
+        "drag_N": 2.94,
+        "G_force": 0.5,
+        "parachute": false
+    },
+    {
+        "altitude": 51.02,
+        "velocity": 19.56,
+        "requested_thrust_N": 10.17,
+        "actual_thrust_N": 20.24,
+        "drag_N": 2.81,
+        "G_force": 0.37,
+        "parachute": false
+    },
+    {
+        "altitude": 52.9,
+        "velocity": 18.81,
+        "requested_thrust_N": 4.59,
+        "actual_thrust_N": 13.98,
+        "drag_N": 2.64,
+        "G_force": 0.24,
+        "parachute": false
+    },
+    {
+        "altitude": 54.7,
+        "velocity": 17.96,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 8.39,
+        "drag_N": 2.44,
+        "G_force": 0.13,
+        "parachute": false
+    },
+    {
+        "altitude": 56.4,
+        "velocity": 17.03,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 5.03,
+        "drag_N": 2.22,
+        "G_force": 0.06,
+        "parachute": false
+    },
+    {
+        "altitude": 58.01,
+        "velocity": 16.07,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 3.02,
+        "drag_N": 2.0,
+        "G_force": 0.02,
+        "parachute": false
+    },
+    {
+        "altitude": 59.52,
+        "velocity": 15.09,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 1.81,
+        "drag_N": 1.78,
+        "G_force": 0.0,
+        "parachute": false
+    },
+    {
+        "altitude": 60.93,
+        "velocity": 14.1,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 1.09,
+        "drag_N": 1.57,
+        "G_force": -0.01,
+        "parachute": false
+    },
+    {
+        "altitude": 62.24,
+        "velocity": 13.11,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.65,
+        "drag_N": 1.37,
+        "G_force": -0.02,
+        "parachute": false
+    },
+    {
+        "altitude": 63.45,
+        "velocity": 12.11,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.39,
+        "drag_N": 1.18,
+        "G_force": -0.02,
+        "parachute": false
+    },
+    {
+        "altitude": 64.56,
+        "velocity": 11.11,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.23,
+        "drag_N": 1.01,
+        "G_force": -0.02,
+        "parachute": false
+    },
+    {
+        "altitude": 65.57,
+        "velocity": 10.12,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.14,
+        "drag_N": 0.85,
+        "G_force": -0.01,
+        "parachute": false
+    },
+    {
+        "altitude": 66.49,
+        "velocity": 9.12,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.08,
+        "drag_N": 0.71,
+        "G_force": -0.01,
+        "parachute": false
+    },
+    {
+        "altitude": 67.3,
+        "velocity": 8.13,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.05,
+        "drag_N": 0.57,
+        "G_force": -0.01,
+        "parachute": false
+    },
+    {
+        "altitude": 68.01,
+        "velocity": 7.14,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.03,
+        "drag_N": 0.46,
+        "G_force": -0.01,
+        "parachute": false
+    },
+    {
+        "altitude": 68.63,
+        "velocity": 6.16,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.02,
+        "drag_N": 0.35,
+        "G_force": -0.01,
+        "parachute": false
+    },
+    {
+        "altitude": 69.15,
+        "velocity": 5.17,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.01,
+        "drag_N": 0.26,
+        "G_force": -0.01,
+        "parachute": false
+    },
+    {
+        "altitude": 69.56,
+        "velocity": 4.19,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.01,
+        "drag_N": 0.18,
+        "G_force": -0.0,
+        "parachute": false
+    },
+    {
+        "altitude": 69.89,
+        "velocity": 3.2,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.0,
+        "drag_N": 0.12,
+        "G_force": -0.0,
+        "parachute": false
+    },
+    {
+        "altitude": 70.11,
+        "velocity": 2.22,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.0,
+        "drag_N": 0.07,
+        "G_force": -0.0,
+        "parachute": false
+    },
+    {
+        "altitude": 70.23,
+        "velocity": 1.24,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.0,
+        "drag_N": 0.03,
+        "G_force": -0.0,
+        "parachute": false
+    },
+    {
+        "altitude": 70.26,
+        "velocity": 0.26,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.0,
+        "drag_N": 0.01,
+        "G_force": -0.0,
+        "parachute": false
+    },
+    {
+        "altitude": 70.18,
+        "velocity": -0.72,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.0,
+        "drag_N": 0.0,
+        "G_force": 0.0,
+        "parachute": false
+    },
+    {
+        "altitude": 70.01,
+        "velocity": -1.7,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.0,
+        "drag_N": -0.0,
+        "G_force": 0.0,
+        "parachute": false
+    },
+    {
+        "altitude": 69.75,
+        "velocity": -2.68,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.0,
+        "drag_N": -0.02,
+        "G_force": 0.0,
+        "parachute": false
+    },
+    {
+        "altitude": 69.38,
+        "velocity": -3.66,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.0,
+        "drag_N": -0.05,
+        "G_force": 0.0,
+        "parachute": false
+    },
+    {
+        "altitude": 68.92,
+        "velocity": -4.64,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.0,
+        "drag_N": -0.09,
+        "G_force": 0.0,
+        "parachute": false
+    },
+    {
+        "altitude": 68.35,
+        "velocity": -5.62,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.0,
+        "drag_N": -0.15,
+        "G_force": 0.0,
+        "parachute": false
+    },
+    {
+        "altitude": 67.69,
+        "velocity": -6.59,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.0,
+        "drag_N": -0.22,
+        "G_force": 0.0,
+        "parachute": false
+    },
+    {
+        "altitude": 66.94,
+        "velocity": -7.57,
+        "requested_thrust_N": 0.0,
+        "actual_thrust_N": 0.0,
+        "drag_N": -0.3,
+        "G_force": 0.01,
+        "parachute": false
+    },
+    {
+        "altitude": 66.09,
+        "velocity": -8.51,
+        "requested_thrust_N": 3.43,
+        "actual_thrust_N": 1.37,
+        "drag_N": -0.39,
+        "G_force": 0.04,
+        "parachute": false
+    },
+    {
+        "altitude": 65.15,
+        "velocity": -9.4,
+        "requested_thrust_N": 8.45,
+        "actual_thrust_N": 4.2,
+        "drag_N": -0.5,
+        "G_force": 0.1,
+        "parachute": false
+    },
+    {
+        "altitude": 64.13,
+        "velocity": -10.2,
+        "requested_thrust_N": 13.32,
+        "actual_thrust_N": 7.85,
+        "drag_N": -0.61,
+        "G_force": 0.18,
+        "parachute": false
+    },
+    {
+        "altitude": 63.03,
+        "velocity": -10.92,
+        "requested_thrust_N": 18.79,
+        "actual_thrust_N": 12.23,
+        "drag_N": -0.72,
+        "G_force": 0.27,
+        "parachute": false
+    },
+    {
+        "altitude": 61.88,
+        "velocity": -11.53,
+        "requested_thrust_N": 24.12,
+        "actual_thrust_N": 16.99,
+        "drag_N": -0.82,
+        "G_force": 0.37,
+        "parachute": false
+    },
+    {
+        "altitude": 60.68,
+        "velocity": -12.04,
+        "requested_thrust_N": 29.14,
+        "actual_thrust_N": 21.85,
+        "drag_N": -0.92,
+        "G_force": 0.48,
+        "parachute": false
+    },
+    {
+        "altitude": 59.43,
+        "velocity": -12.45,
+        "requested_thrust_N": 34.16,
+        "actual_thrust_N": 26.77,
+        "drag_N": -1.0,
+        "G_force": 0.58,
+        "parachute": false
+    },
+    {
+        "altitude": 58.16,
+        "velocity": -12.75,
+        "requested_thrust_N": 39.6,
+        "actual_thrust_N": 31.9,
+        "drag_N": -1.07,
+        "G_force": 0.69,
+        "parachute": false
+    },
+    {
+        "altitude": 56.86,
+        "velocity": -12.95,
+        "requested_thrust_N": 44.54,
+        "actual_thrust_N": 36.96,
+        "drag_N": -1.12,
+        "G_force": 0.8,
+        "parachute": false
+    },
+    {
+        "altitude": 55.56,
+        "velocity": -13.04,
+        "requested_thrust_N": 49.74,
+        "actual_thrust_N": 42.07,
+        "drag_N": -1.15,
+        "G_force": 0.91,
+        "parachute": false
+    },
+    {
+        "altitude": 54.26,
+        "velocity": -13.02,
+        "requested_thrust_N": 54.41,
+        "actual_thrust_N": 47.01,
+        "drag_N": -1.17,
+        "G_force": 1.01,
+        "parachute": false
+    },
+    {
+        "altitude": 52.97,
+        "velocity": -12.91,
+        "requested_thrust_N": 58.77,
+        "actual_thrust_N": 51.71,
+        "drag_N": -1.17,
+        "G_force": 1.11,
+        "parachute": false
+    },
+    {
+        "altitude": 51.69,
+        "velocity": -12.71,
+        "requested_thrust_N": 62.79,
+        "actual_thrust_N": 56.15,
+        "drag_N": -1.15,
+        "G_force": 1.2,
+        "parachute": false
+    },
+    {
+        "altitude": 50.45,
+        "velocity": -12.42,
+        "requested_thrust_N": 67.42,
+        "actual_thrust_N": 60.65,
+        "drag_N": -1.11,
+        "G_force": 1.3,
+        "parachute": false
+    },
+    {
+        "altitude": 49.25,
+        "velocity": -12.04,
+        "requested_thrust_N": 71.25,
+        "actual_thrust_N": 64.89,
+        "drag_N": -1.06,
+        "G_force": 1.39,
+        "parachute": false
+    },
+    {
+        "altitude": 48.09,
+        "velocity": -11.59,
+        "requested_thrust_N": 74.11,
+        "actual_thrust_N": 68.58,
+        "drag_N": -1.0,
+        "G_force": 1.46,
+        "parachute": false
+    },
+    {
+        "altitude": 46.98,
+        "velocity": -11.06,
+        "requested_thrust_N": 77.42,
+        "actual_thrust_N": 72.12,
+        "drag_N": -0.93,
+        "G_force": 1.54,
+        "parachute": false
+    },
+    {
+        "altitude": 45.94,
+        "velocity": -10.47,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 75.27,
+        "drag_N": -0.84,
+        "G_force": 1.6,
+        "parachute": false
+    },
+    {
+        "altitude": 44.95,
+        "velocity": -9.85,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 77.16,
+        "drag_N": -0.76,
+        "G_force": 1.64,
+        "parachute": false
+    },
+    {
+        "altitude": 44.03,
+        "velocity": -9.2,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 78.3,
+        "drag_N": -0.67,
+        "G_force": 1.66,
+        "parachute": false
+    },
+    {
+        "altitude": 43.18,
+        "velocity": -8.54,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 78.98,
+        "drag_N": -0.58,
+        "G_force": 1.67,
+        "parachute": false
+    },
+    {
+        "altitude": 42.39,
+        "velocity": -7.87,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.39,
+        "drag_N": -0.5,
+        "G_force": 1.68,
+        "parachute": false
+    },
+    {
+        "altitude": 41.67,
+        "velocity": -7.2,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.63,
+        "drag_N": -0.43,
+        "G_force": 1.68,
+        "parachute": false
+    },
+    {
+        "altitude": 41.02,
+        "velocity": -6.53,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.78,
+        "drag_N": -0.36,
+        "G_force": 1.68,
+        "parachute": false
+    },
+    {
+        "altitude": 40.43,
+        "velocity": -5.86,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.87,
+        "drag_N": -0.29,
+        "G_force": 1.69,
+        "parachute": false
+    },
+    {
+        "altitude": 39.91,
+        "velocity": -5.19,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.92,
+        "drag_N": -0.24,
+        "G_force": 1.69,
+        "parachute": false
+    },
+    {
+        "altitude": 39.46,
+        "velocity": -4.52,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.95,
+        "drag_N": -0.19,
+        "G_force": 1.68,
+        "parachute": false
+    },
+    {
+        "altitude": 39.08,
+        "velocity": -3.84,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.97,
+        "drag_N": -0.14,
+        "G_force": 1.68,
+        "parachute": false
+    },
+    {
+        "altitude": 38.76,
+        "velocity": -3.17,
+        "requested_thrust_N": 80.0,
+        "actual_thrust_N": 79.98,
+        "drag_N": -0.1,
+        "G_force": 1.68,
+        "parachute": false
+    }
+]

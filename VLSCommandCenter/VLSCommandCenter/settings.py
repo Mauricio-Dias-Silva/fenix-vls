@@ -24,10 +24,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-vls-local-dev-key-change-in-production')
 
 # In production (Cloud Run) DEBUG must be False
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # Cloud Run assigns a random URL to each revision. '*.run.app' covers all.
-ALLOWED_HOSTS = ['*'] if not DEBUG else ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*'] 
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.run.app',
+    'https://*.auracloud.com.br'
+]
 
 
 # Application definition
@@ -120,7 +125,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICSFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
