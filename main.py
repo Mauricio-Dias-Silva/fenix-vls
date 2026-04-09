@@ -65,8 +65,9 @@ def run_ic_simulation():
             print(f"EVENTO T+{current_time:.1f}s: {status}")
             break
 
-    # Salva o Relatório Univesp
-    report_name = f"simulations/stress_reports/ic_flight_report_{datetime.now().strftime('%Y%H%M%S')}.json"
+    # Salva o Relatório
+    os.makedirs(os.path.join("simulations", "stress_reports"), exist_ok=True)
+    report_name = f"simulations/stress_reports/ic_flight_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     with open(report_name, "w") as f:
         json.dump(sim.flight_log, f, indent=4)
         

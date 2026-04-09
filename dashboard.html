@@ -1,544 +1,781 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fênix VLS | Telemetry Dashboard</title>
-    <!-- Chart.js for data visualization -->
+    <title>Fênix VLS | Mission Control</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Google Fonts for premium typography -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;500;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --bg-card: rgba(30, 41, 59, 0.7);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent-blue: #38bdf8;
-            --accent-green: #34d399;
-            --accent-red: #fb7185;
-            --accent-purple: #c084fc;
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --bg: #060d1a;
+            --bg-card: rgba(15, 25, 50, 0.75);
+            --text: #e2e8f0;
+            --muted: #64748b;
+            --blue: #38bdf8;
+            --green: #34d399;
+            --red: #fb7185;
+            --purple: #c084fc;
+            --amber: #fbbf24;
+            --border: rgba(255,255,255,0.08);
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            margin: 0;
-            padding: 0;
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            background-image:
-                radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.05), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(192, 132, 252, 0.05), transparent 25%);
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
+            background-image:
+                radial-gradient(ellipse at 10% 0%, rgba(56,189,248,0.07) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 100%, rgba(192,132,252,0.06) 0%, transparent 50%);
         }
 
+        /* ─── HEADER ─── */
         header {
-            padding: 24px 40px;
+            padding: 18px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
-            background: rgba(15, 23, 42, 0.8);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            background: rgba(6,13,26,0.9);
+            backdrop-filter: blur(20px);
+            position: sticky; top: 0; z-index: 100;
         }
 
-        .logo-area h1 {
+        .logo h1 {
             font-family: 'Orbitron', sans-serif;
-            margin: 0;
-            font-size: 1.8rem;
-            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+            font-size: 1.6rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--blue), var(--purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: 3px;
+        }
+
+        .logo p {
+            color: var(--muted);
+            font-size: 0.75rem;
             letter-spacing: 2px;
+            margin-top: 2px;
         }
 
-        .logo-area p {
-            margin: 4px 0 0 0;
-            font-size: 0.9rem;
-            color: var(--text-muted);
+        .header-controls { display: flex; gap: 12px; align-items: center; }
+
+        /* ─── BUTTONS ─── */
+        .btn {
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
             letter-spacing: 1px;
+            border: 1px solid;
         }
 
-        .upload-btn-wrapper {
+        .btn-launch {
+            border-color: var(--green);
+            color: var(--green);
+            background: rgba(52,211,153,0.08);
+        }
+        .btn-launch:hover { background: var(--green); color: #000; box-shadow: 0 0 20px rgba(52,211,153,0.4); }
+        .btn-launch:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .btn-upload {
+            border-color: var(--blue);
+            color: var(--blue);
+            background: rgba(56,189,248,0.05);
+            position: relative; overflow: hidden;
+        }
+        .btn-upload:hover { background: var(--blue); color: #000; }
+        .btn-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; font-size: 50px; }
+
+        /* ─── STATUS BAR ─── */
+        #status-bar {
+            padding: 8px 40px;
+            background: rgba(0,0,0,0.3);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            font-size: 0.75rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        #mission-status { font-size: 0.8rem; font-weight: 700; }
+        .status-nominal { color: var(--green); }
+        .status-running { color: var(--amber); animation: pulse-text 1s infinite alternate; }
+        .status-fail { color: var(--red); }
+        .status-idle { color: var(--muted); }
+
+        @keyframes pulse-text { from { opacity: 1; } to { opacity: 0.5; } }
+
+        /* ─── KPI GRID ─── */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            padding: 20px 40px;
+        }
+
+        .kpi {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            backdrop-filter: blur(10px);
             position: relative;
             overflow: hidden;
-            display: inline-block;
         }
 
-        .btn {
-            border: 1px solid var(--accent-blue);
-            color: var(--accent-blue);
-            background-color: transparent;
-            padding: 10px 24px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
-        }
-
-        .btn:hover {
-            background-color: var(--accent-blue);
-            color: var(--bg-dark);
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
-        }
-
-        .upload-btn-wrapper input[type=file] {
-            font-size: 100px;
+        .kpi::before {
+            content: '';
             position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            cursor: pointer;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blue), transparent);
         }
 
-        .dashboard-container {
-            padding: 32px 40px;
+        .kpi-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; }
+        .kpi-val {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-top: 6px;
+            color: var(--blue);
+            transition: color 0.3s;
+        }
+        .kpi-val.safe { color: var(--green); }
+        .kpi-val.warn { color: var(--amber); }
+        .kpi-val.danger { color: var(--red); }
+        .kpi-val.purple { color: var(--purple); }
+
+        /* ─── MAIN GRID ─── */
+        .main-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            max-width: 1600px;
-            margin: 0 auto;
+            gap: 16px;
+            padding: 0 40px 40px;
         }
 
         .card {
             background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 16px;
-            border: 1px solid var(--glass-border);
             padding: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(12px);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
         }
-
-        .card:hover {
-            transform: translateY(-2px);
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(to right, var(--accent-blue), transparent);
-            opacity: 0.5;
-        }
-
-        .card.wide {
-            grid-column: 1 / -1;
-        }
+        .card:hover { transform: translateY(-2px); }
+        .card.wide { grid-column: 1 / -1; }
 
         .card h2 {
-            margin: 0 0 20px 0;
-            font-size: 1.2rem;
-            font-weight: 500;
+            font-size: 0.85rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .chart-box { position: relative; height: 260px; }
+
+        /* ─── FOGUETE ANIMADO ─── */
+        #rocket-canvas-card {
             display: flex;
+            flex-direction: column;
             align-items: center;
+        }
+
+        #rocket-canvas {
+            background: radial-gradient(ellipse at center bottom, rgba(56,189,248,0.05) 0%, transparent 70%);
+            border-radius: 8px;
+            width: 100%;
+            height: 260px;
+        }
+
+        /* ─── BCI PANEL ─── */
+        .bci-gauge-container { display: flex; gap: 12px; margin-top: 12px; }
+
+        .wave-bar {
+            flex: 1;
+            height: 6px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .wave-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .bci-stat { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+
+        /* ─── EVENT LOG ─── */
+        #event-log {
+            height: 200px;
+            overflow-y: auto;
+            font-size: 0.75rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .event-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            display: flex;
             gap: 10px;
         }
 
-        .chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-        }
+        .event-time { color: var(--muted); min-width: 60px; }
+        .event-nominal { color: var(--green); }
+        .event-warn { color: var(--amber); }
+        .event-fail { color: var(--red); }
+        .event-bci { color: var(--purple); }
 
-        /* Status Grid */
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+        /* ─── SCROLLBAR ─── */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+        /* ─── CONFIG ─── */
+        .launch-config {
+            display: flex;
             gap: 16px;
-            margin-bottom: 24px;
-            grid-column: 1 / -1;
+            align-items: center;
         }
 
-        .status-box {
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
+        .config-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
-        .status-box h3 {
-            margin: 0;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .status-box .value {
-            margin: 10px 0 0 0;
-            font-size: 2rem;
+        .config-field label { font-size: 0.7rem; color: var(--muted); letter-spacing: 1px; }
+        .config-field input {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 6px 12px;
+            border-radius: 6px;
+            width: 90px;
             font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
+            font-size: 0.85rem;
         }
-
-        .value.safe {
-            color: var(--accent-green);
-        }
-
-        .value.warn {
-            color: #fbbf24;
-        }
-
-        .value.danger {
-            color: var(--accent-red);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-dark);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--glass-border);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-muted);
-        }
+        .config-field input:focus { outline: none; border-color: var(--blue); }
     </style>
 </head>
-
 <body>
 
-    <header>
-        <div class="logo-area">
-            <h1>FÊNIX VLS</h1>
-            <p>UNIVESP IC - ZERO-POINT TELEMETRY DASHBOARD</p>
-        </div>
-        <div class="controls">
-            <div class="upload-btn-wrapper">
-                <button class="btn">Load JSON Report</button>
-                <input type="file" id="jsonUpload" accept=".json" />
+<header>
+    <div class="logo">
+        <h1>FÊNIX VLS</h1>
+        <p>MISSION CONTROL · ZERO-POINT TELEMETRY</p>
+    </div>
+    <div class="header-controls">
+        <div class="launch-config">
+            <div class="config-field">
+                <label>ALTITUDE ALV. (m)</label>
+                <input type="number" id="cfg-alt" value="30" min="5" max="500">
+            </div>
+            <div class="config-field">
+                <label>DURAÇÃO (s)</label>
+                <input type="number" id="cfg-dur" value="20" min="5" max="120">
             </div>
         </div>
-    </header>
+        <button class="btn btn-launch" id="btnLaunch" onclick="launchSimulation()">⚡ LAUNCH</button>
+        <div class="btn btn-upload">
+            📂 LOAD JSON
+            <input type="file" id="jsonUpload" accept=".json" onchange="loadJsonReport(event)">
+        </div>
+    </div>
+</header>
 
-    <div id="initial-message" style="text-align: center; margin-top: 100px; color: var(--text-muted);">
-        <h2>Esperando Dados de Telemetria...</h2>
-        <p>Faça o upload do arquivo <code>.json</code> gerado pelo Physics Engine VLS.</p>
+<div id="status-bar">
+    <span id="mission-status" class="status-idle">◉ IDLE — AWAITING LAUNCH</span>
+    <span style="color:var(--muted)">|</span>
+    <span id="sb-frames" style="color:var(--muted)">FRAMES: 0</span>
+    <span id="sb-time" style="color:var(--muted)">T+0.0s</span>
+    <span id="sb-parachute" style="color:var(--muted)">CHUTE: ARMED</span>
+</div>
+
+<!-- KPIs -->
+<div class="kpi-grid">
+    <div class="kpi">
+        <div class="kpi-label">Altitude</div>
+        <div class="kpi-val safe" id="kpi-alt">0.00 m</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-label">Velocidade</div>
+        <div class="kpi-val" id="kpi-vel">0.00 m/s</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-label">Empuxo Real</div>
+        <div class="kpi-val" id="kpi-thrust">0.00 N</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-label">G-Force</div>
+        <div class="kpi-val safe" id="kpi-gforce">1.0 G</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-label">BCI Coerência</div>
+        <div class="kpi-val purple" id="kpi-bci">-- %</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-label">Stealth</div>
+        <div class="kpi-val" id="kpi-stealth">OFF</div>
+    </div>
+</div>
+
+<!-- CHARTS -->
+<div class="main-grid">
+    <!-- Perfil de Voo LIVE -->
+    <div class="card wide">
+        <h2>📡 Perfil de Voo em Tempo Real</h2>
+        <div class="chart-box">
+            <canvas id="flightChart"></canvas>
+        </div>
     </div>
 
-    <div class="dashboard-container hidden" id="dashboard">
-
-        <div class="status-grid">
-            <div class="status-box">
-                <h3>Voo Duração</h3>
-                <div class="value" id="val-time">0.0s</div>
-            </div>
-            <div class="status-box">
-                <h3>G-Force Máxima</h3>
-                <div class="value" id="val-gforce">1.0G</div>
-            </div>
-            <div class="status-box">
-                <h3>Altitude Máxima</h3>
-                <div class="value safe" id="val-alt">0.0m</div>
-            </div>
-            <div class="status-box">
-                <h3>Status do Paraquedas</h3>
-                <div class="value safe" id="val-parachute">SELDOM</div>
-            </div>
+    <!-- Empuxo -->
+    <div class="card">
+        <h2>🔥 Dinâmica de Propulsão</h2>
+        <div class="chart-box">
+            <canvas id="thrustChart"></canvas>
         </div>
-
-        <div class="card wide">
-            <h2>🌍 Perfil de Voo (Altitude & Velocidade)</h2>
-            <div class="chart-container">
-                <canvas id="flightProfileChart"></canvas>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>🔥 Dinâmica de Motores (Empuxo & Inércia)</h2>
-            <div class="chart-container">
-                <canvas id="thrustChart"></canvas>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>🧠 Esforço Estrutural (G-Force & Drag)</h2>
-            <div class="chart-container">
-                <canvas id="stressChart"></canvas>
-            </div>
-        </div>
-
     </div>
 
-    <script>
-        // Chart Instances
-        let flightChart, thrustChart, stressChart;
+    <!-- G-Force -->
+    <div class="card">
+        <h2>⚙️ Esforço Estrutural</h2>
+        <div class="chart-box">
+            <canvas id="stressChart"></canvas>
+        </div>
+    </div>
 
-        // Common Chart Defaults
-        Chart.defaults.color = '#94a3b8';
-        Chart.defaults.font.family = 'Inter';
+    <!-- Foguete animado -->
+    <div class="card" id="rocket-canvas-card">
+        <h2>🚀 Visualização de Voo</h2>
+        <canvas id="rocket-canvas"></canvas>
+    </div>
 
-        document.getElementById('jsonUpload').addEventListener('change', function (e) {
-            const file = e.target.files[0];
-            if (!file) return;
+    <!-- BCI / Neural Link -->
+    <div class="card">
+        <h2>🧠 Neural BCI — Q-Drive Coherence</h2>
+        <div style="margin-top:8px;">
+            <div style="font-size:0.75rem; color:var(--muted); margin-bottom:8px;">COERÊNCIA MÉDIA (Moving Avg.)</div>
+            <div class="wave-bar"><div class="wave-fill" id="bci-bar" style="width:0%;background:var(--purple);"></div></div>
+            <div class="bci-stat"><span>0%</span><span id="bci-val-text">0%</span><span>100%</span></div>
+        </div>
+        <div style="margin-top:20px; font-size:0.75rem; color:var(--muted);">LIMIAR DE ATIVAÇÃO DO Q-DRIVE</div>
+        <div style="background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:8px; padding:12px; margin-top:6px; font-family:'Orbitron',sans-serif;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                <span style="font-size:0.7rem;color:var(--muted);">THRESHOLD</span>
+                <span style="color:var(--amber);">85%</span>
+            </div>
+            <div style="font-size:0.65rem;color:var(--muted);">Se BCI ≥ 85%: Q-Drive ONLINE → Empuxo entregue</div>
+            <div style="font-size:0.65rem;color:var(--red);margin-top:4px;">Se BCI &lt; 85%: Q-Drive INTERRUPTED → Thrust = 0N</div>
+        </div>
+        <div id="bci-event-log" style="margin-top:12px;font-size:0.75rem;color:var(--muted);height:60px;overflow:hidden;"></div>
+    </div>
 
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    processTelemetryData(data);
-                } catch (error) {
-                    alert("Erro ao ler o JSON: " + error.message);
-                }
-            };
-            reader.readAsText(file);
+    <!-- Log de Eventos -->
+    <div class="card">
+        <h2>📋 Event Log</h2>
+        <div id="event-log"></div>
+    </div>
+</div>
+
+<script>
+    Chart.defaults.color = '#64748b';
+    Chart.defaults.font.family = 'Inter';
+    Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+
+    // ─── Chart Setup ───────────────────────────────────────────────────────
+    const MAX_POINTS = 200;
+
+    function makeDataset(label, color, yAxisID = 'y', dashed = false) {
+        return {
+            label, yAxisID,
+            data: [],
+            borderColor: color,
+            backgroundColor: color.replace(')', ', 0.15)').replace('rgb', 'rgba'),
+            borderWidth: 2,
+            pointRadius: 0,
+            tension: 0.3,
+            fill: true,
+            borderDash: dashed ? [4, 4] : [],
+        };
+    }
+
+    const flightChart = new Chart(document.getElementById('flightChart'), {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [
+                makeDataset('Altitude (m)', '#38bdf8', 'y'),
+                makeDataset('Velocidade (m/s)', '#c084fc', 'y1', true),
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false, animation: false,
+            interaction: { mode: 'index', intersect: false },
+            scales: {
+                x: { ticks: { maxTicksLimit: 10 } },
+                y: { position: 'left', title: { display: true, text: 'Metros' } },
+                y1: { position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'm/s' } }
+            }
+        }
+    });
+
+    const thrustChart = new Chart(document.getElementById('thrustChart'), {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [
+                makeDataset('Req. (N)', 'rgba(100,116,139,0.8)', 'y', true),
+                makeDataset('Real EDF (N)', '#fb7185', 'y'),
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false, animation: false,
+            interaction: { mode: 'index', intersect: false },
+            scales: {
+                x: { ticks: { maxTicksLimit: 10 } },
+                y: { title: { display: true, text: 'Newtons' } }
+            }
+        }
+    });
+
+    const stressChart = new Chart(document.getElementById('stressChart'), {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [
+                makeDataset('G-Force', '#34d399', 'y'),
+                makeDataset('Drag (N)', '#fbbf24', 'y1'),
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false, animation: false,
+            interaction: { mode: 'index', intersect: false },
+            scales: {
+                x: { ticks: { maxTicksLimit: 10 } },
+                y: { position: 'left', title: { display: true, text: 'G' } },
+                y1: { position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Drag N' } }
+            }
+        }
+    });
+
+    // ─── Rocket Canvas ───────────────────────────────────────────────────
+    const rCanvas = document.getElementById('rocket-canvas');
+    const rCtx = rCanvas.getContext('2d');
+    let rocketAlt = 0, maxRocketAlt = 0, rocketVel = 0, parachuteActive = false;
+
+    function resizeRocket() {
+        rCanvas.width = rCanvas.offsetWidth;
+        rCanvas.height = rCanvas.offsetHeight;
+    }
+    resizeRocket();
+    window.addEventListener('resize', resizeRocket);
+
+    function drawRocket(altPercent, vel, chute) {
+        const w = rCanvas.width, h = rCanvas.height;
+        rCtx.clearRect(0, 0, w, h);
+
+        // Stars
+        rCtx.fillStyle = 'rgba(255,255,255,0.3)';
+        for (let i = 0; i < 40; i++) {
+            rCtx.beginPath();
+            rCtx.arc((Math.sin(i * 137.5) * 0.5 + 0.5) * w, (Math.cos(i * 137.5) * 0.5 + 0.5) * h, 0.8, 0, Math.PI * 2);
+            rCtx.fill();
+        }
+
+        // Altitude line (ground)
+        rCtx.strokeStyle = 'rgba(52,211,153,0.3)';
+        rCtx.setLineDash([4, 4]);
+        rCtx.lineWidth = 1;
+        rCtx.beginPath();
+        rCtx.moveTo(0, h - 20);
+        rCtx.lineTo(w, h - 20);
+        rCtx.stroke();
+        rCtx.setLineDash([]);
+
+        // Calculate Y position (inverted — higher alt = higher on canvas)
+        const margin = 40;
+        const rocketY = h - margin - (altPercent / 100) * (h - margin * 2);
+        const rocketX = w / 2;
+
+        // Engine flame
+        if (!chute && vel > 0.5) {
+            const flameH = 15 + Math.random() * 10;
+            const grad = rCtx.createLinearGradient(rocketX, rocketY + 18, rocketX, rocketY + 18 + flameH);
+            grad.addColorStop(0, 'rgba(251,113,133,0.95)');
+            grad.addColorStop(0.5, 'rgba(251,191,36,0.7)');
+            grad.addColorStop(1, 'rgba(251,191,36,0)');
+            rCtx.fillStyle = grad;
+            rCtx.beginPath();
+            rCtx.moveTo(rocketX - 5, rocketY + 18);
+            rCtx.lineTo(rocketX + 5, rocketY + 18);
+            rCtx.lineTo(rocketX, rocketY + 18 + flameH);
+            rCtx.closePath();
+            rCtx.fill();
+        }
+
+        // Paraquedas
+        if (chute) {
+            rCtx.strokeStyle = '#fbbf24';
+            rCtx.lineWidth = 1.5;
+            rCtx.beginPath();
+            rCtx.arc(rocketX, rocketY - 28, 18, Math.PI, 0);
+            rCtx.stroke();
+            // Cordas
+            for (let i = -2; i <= 2; i++) {
+                rCtx.beginPath();
+                rCtx.moveTo(rocketX + i * 9, rocketY - 28);
+                rCtx.lineTo(rocketX, rocketY - 10);
+                rCtx.stroke();
+            }
+        }
+
+        // Rocket body
+        const bodyH = 30, bodyW = 10;
+        rCtx.fillStyle = '#38bdf8';
+        rCtx.beginPath();
+        rCtx.roundRect(rocketX - bodyW / 2, rocketY - bodyH / 2, bodyW, bodyH, 3);
+        rCtx.fill();
+
+        // Nosecone
+        rCtx.fillStyle = '#c084fc';
+        rCtx.beginPath();
+        rCtx.moveTo(rocketX - bodyW / 2, rocketY - bodyH / 2);
+        rCtx.lineTo(rocketX + bodyW / 2, rocketY - bodyH / 2);
+        rCtx.lineTo(rocketX, rocketY - bodyH / 2 - 14);
+        rCtx.closePath();
+        rCtx.fill();
+
+        // Fins
+        rCtx.fillStyle = '#64748b';
+        [[-1.5, 0], [0.5, 0]].forEach(([dx]) => {
+            rCtx.beginPath();
+            rCtx.moveTo(rocketX + dx * bodyW, rocketY + bodyH / 2);
+            rCtx.lineTo(rocketX + dx * bodyW - 6 * Math.sign(dx - 0.5 + 0.001), rocketY + bodyH / 2 + 8);
+            rCtx.lineTo(rocketX + dx * bodyW, rocketY + bodyH / 2 - 6);
+            rCtx.closePath();
+            rCtx.fill();
         });
 
-        function processTelemetryData(data) {
-            // Hide initial message, show dashboard
-            document.getElementById('initial-message').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
+        // Altitude label
+        rCtx.fillStyle = '#38bdf8';
+        rCtx.font = '11px Orbitron';
+        rCtx.fillText(`${rocketAlt.toFixed(1)}m`, rocketX + 16, rocketY);
 
-            // Extraction arrays
-            const labels = [];
-            const altitudes = [];
-            const velocities = [];
-            const requestedThrusts = [];
-            const actualThrusts = [];
-            const gForces = [];
-            const drags = [];
-            const parachuteColors = []; // To highlight parachute deployment
+        // Glowing ring
+        const glow = rCtx.createRadialGradient(rocketX, rocketY, 5, rocketX, rocketY, 30);
+        glow.addColorStop(0, 'rgba(56,189,248,0.12)');
+        glow.addColorStop(1, 'rgba(56,189,248,0)');
+        rCtx.fillStyle = glow;
+        rCtx.beginPath();
+        rCtx.arc(rocketX, rocketY, 30, 0, Math.PI * 2);
+        rCtx.fill();
+    }
 
-            let maxG = 0;
-            let maxAlt = 0;
-            let parachuteDeployed = false;
-            let deployIndex = -1;
+    function animateRocket() {
+        const pct = maxRocketAlt > 0 ? Math.min(100, (rocketAlt / maxRocketAlt) * 100) : 0;
+        drawRocket(pct, rocketVel, parachuteActive);
+        requestAnimationFrame(animateRocket);
+    }
+    animateRocket();
+
+    // ─── Data Push ─────────────────────────────────────────────────────────
+    let frameCount = 0;
+
+    function pushFrame(f) {
+        const label = `${f.t}s`;
+        frameCount++;
+
+        [flightChart, thrustChart, stressChart].forEach(ch => {
+            ch.data.labels.push(label);
+            if (ch.data.labels.length > MAX_POINTS) ch.data.labels.shift();
+        });
+
+        // Flight
+        flightChart.data.datasets[0].data.push(f.altitude);
+        flightChart.data.datasets[1].data.push(f.velocity);
+        if (flightChart.data.datasets[0].data.length > MAX_POINTS) {
+            flightChart.data.datasets.forEach(d => d.data.shift());
+        }
+
+        // Thrust
+        thrustChart.data.datasets[0].data.push(f.requested_thrust_N);
+        thrustChart.data.datasets[1].data.push(f.actual_thrust_N);
+        if (thrustChart.data.datasets[0].data.length > MAX_POINTS) {
+            thrustChart.data.datasets.forEach(d => d.data.shift());
+        }
+
+        // Stress
+        stressChart.data.datasets[0].data.push(f.G_force);
+        stressChart.data.datasets[1].data.push(Math.abs(f.drag_N));
+        if (stressChart.data.datasets[0].data.length > MAX_POINTS) {
+            stressChart.data.datasets.forEach(d => d.data.shift());
+        }
+
+        [flightChart, thrustChart, stressChart].forEach(ch => ch.update('none'));
+
+        // KPIs
+        document.getElementById('kpi-alt').textContent = `${f.altitude.toFixed(2)} m`;
+        const velEl = document.getElementById('kpi-vel');
+        velEl.textContent = `${f.velocity.toFixed(2)} m/s`;
+        velEl.className = 'kpi-val ' + (f.velocity > 0 ? 'safe' : (f.velocity < -5 ? 'danger' : 'warn'));
+
+        document.getElementById('kpi-thrust').textContent = `${f.actual_thrust_N.toFixed(2)} N`;
+
+        const gEl = document.getElementById('kpi-gforce');
+        gEl.textContent = `${f.G_force.toFixed(2)} G`;
+        gEl.className = 'kpi-val ' + (f.G_force > 3 ? 'danger' : f.G_force > 2 ? 'warn' : 'safe');
+
+        const bci = f.bci_coherence || 0;
+        document.getElementById('kpi-bci').textContent = `${bci.toFixed(1)} %`;
+        document.getElementById('bci-bar').style.width = bci + '%';
+        document.getElementById('bci-val-text').textContent = bci.toFixed(1) + '%';
+
+        const stealth = f.stealth;
+        const stealthEl = document.getElementById('kpi-stealth');
+        stealthEl.textContent = stealth ? 'ACTIVE' : 'OFF';
+        stealthEl.className = 'kpi-val ' + (stealth ? 'safe' : '');
+
+        // Rocket visual
+        rocketAlt = f.altitude;
+        rocketVel = f.velocity;
+        parachuteActive = f.parachute;
+        if (rocketAlt > maxRocketAlt) maxRocketAlt = rocketAlt;
+
+        // Status bar
+        document.getElementById('sb-frames').textContent = `FRAMES: ${frameCount}`;
+        document.getElementById('sb-time').textContent = `T+${f.t.toFixed(1)}s`;
+        document.getElementById('sb-parachute').textContent = f.parachute ? '⚠ CHUTE DEPLOYED' : 'CHUTE: ARMED';
+        document.getElementById('sb-parachute').style.color = f.parachute ? 'var(--amber)' : 'var(--muted)';
+
+        // BCI Event log
+        if (bci < 85) {
+            const bciLog = document.getElementById('bci-event-log');
+            bciLog.innerHTML = `<span style="color:var(--red)">⚠ T+${f.t.toFixed(1)}s BCI DROP: ${bci.toFixed(0)}% — Q-DRIVE INTERRUPTED</span>`;
+        }
+
+        // Event log
+        if (frameCount % 10 === 0 || f.parachute || f.status !== 'NOMINAL') {
+            addEvent(f.t, f.status, f.parachute, bci);
+        }
+    }
+
+    function addEvent(t, status, chute, bci) {
+        const log = document.getElementById('event-log');
+        const cls = chute ? 'event-warn' : (status === 'NOMINAL' ? 'event-nominal' : 'event-fail');
+        const msg = chute
+            ? '🪂 PARACHUTE DEPLOYED'
+            : status === 'NOMINAL'
+            ? `ALT OK | BCI ${bci.toFixed(0)}%`
+            : `❌ ${status}`;
+        log.innerHTML = `<div class="event-entry"><span class="event-time">T+${t.toFixed(1)}s</span><span class="${cls}">${msg}</span></div>` + log.innerHTML;
+    }
+
+    // ─── SSE Live Stream ────────────────────────────────────────────────────
+    let evtSource = null;
+
+    async function launchSimulation() {
+        const alt = parseFloat(document.getElementById('cfg-alt').value) || 30;
+        const dur = parseFloat(document.getElementById('cfg-dur').value) || 20;
+
+        document.getElementById('btnLaunch').disabled = true;
+        document.getElementById('mission-status').textContent = '◉ LAUNCHING...';
+        document.getElementById('mission-status').className = 'status-running';
+        frameCount = 0;
+        maxRocketAlt = 0;
+        document.getElementById('event-log').innerHTML = '';
+
+        // Reset charts
+        [flightChart, thrustChart, stressChart].forEach(ch => {
+            ch.data.labels = [];
+            ch.data.datasets.forEach(d => d.data = []);
+            ch.update('none');
+        });
+
+        const resp = await fetch(`/api/launch?target_altitude=${alt}&duration=${dur}`, { method: 'POST' });
+        if (!resp.ok) { alert('Erro ao lançar simulação'); return; }
+
+        document.getElementById('mission-status').textContent = '◉ SIMULATION RUNNING — LIVE TELEMETRY';
+
+        if (evtSource) evtSource.close();
+        evtSource = new EventSource('/api/stream');
+
+        evtSource.onmessage = (e) => {
+            const msg = JSON.parse(e.data);
+            if (msg.type === 'frame') {
+                pushFrame(msg.payload);
+            } else if (msg.type === 'complete') {
+                evtSource.close();
+                document.getElementById('btnLaunch').disabled = false;
+                const finalStatus = msg.payload.status;
+                const missionEl = document.getElementById('mission-status');
+                if (finalStatus === 'NOMINAL' || finalStatus === 'SAFE_PARACHUTE_LANDING') {
+                    missionEl.textContent = `✓ MISSION COMPLETE — ${finalStatus}`;
+                    missionEl.className = 'status-nominal';
+                } else {
+                    missionEl.textContent = `✗ MISSION ENDED — ${finalStatus}`;
+                    missionEl.className = 'status-fail';
+                }
+            }
+        };
+
+        evtSource.onerror = () => {
+            evtSource.close();
+            document.getElementById('btnLaunch').disabled = false;
+        };
+    }
+
+    // ─── JSON File Load ─────────────────────────────────────────────────────
+    function loadJsonReport(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const data = JSON.parse(e.target.result);
+            frameCount = 0;
+            maxRocketAlt = 0;
+            document.getElementById('event-log').innerHTML = '';
+            [flightChart, thrustChart, stressChart].forEach(ch => {
+                ch.data.labels = [];
+                ch.data.datasets.forEach(d => d.data = []);
+            });
+            document.getElementById('mission-status').textContent = '◉ REPLAY MODE';
+            document.getElementById('mission-status').className = 'status-running';
 
             data.forEach((row, i) => {
-                const t = (i * 0.1).toFixed(1); // Assuming 0.1s dt
-                labels.push(`${t}s`);
-
-                altitudes.push(row.altitude);
-                velocities.push(row.velocity);
-
-                // Fallback for older JSONs that only had 'thrust_N'
-                requestedThrusts.push(row.requested_thrust_N || row.thrust_N);
-                actualThrusts.push(row.actual_thrust_N || row.thrust_N);
-
-                gForces.push(row.G_force);
-                drags.push(Math.abs(row.drag_N)); // Use absolute drag for chart
-
-                if (Math.abs(row.G_force) > maxG) maxG = Math.abs(row.G_force);
-                if (row.altitude > maxAlt) maxAlt = row.altitude;
-
-                // Parachute tracking (red background if active)
-                if (row.parachute) {
-                    parachuteDeployed = true;
-                    if (deployIndex === -1) deployIndex = i * 0.1;
-                }
+                pushFrame({
+                    t: parseFloat((i * 0.1).toFixed(1)),
+                    altitude: row.altitude,
+                    velocity: row.velocity,
+                    requested_thrust_N: row.requested_thrust_N || row.thrust_N,
+                    actual_thrust_N: row.actual_thrust_N || row.thrust_N,
+                    drag_N: row.drag_N,
+                    G_force: row.G_force,
+                    parachute: row.parachute,
+                    bci_coherence: 90,
+                    stealth: true,
+                    status: 'NOMINAL',
+                });
             });
 
-            // Update Summary Stats
-            document.getElementById('val-time').innerText = `${(data.length * 0.1).toFixed(1)}s`;
-
-            const gForceEl = document.getElementById('val-gforce');
-            gForceEl.innerText = `${maxG.toFixed(1)}G`;
-            gForceEl.className = `value ${maxG > 2.0 ? 'danger' : (maxG > 1.5 ? 'warn' : 'safe')}`;
-
-            document.getElementById('val-alt').innerText = `${maxAlt.toFixed(1)}m`;
-
-            const paraEl = document.getElementById('val-parachute');
-            if (parachuteDeployed) {
-                paraEl.innerText = `DEPLOYED (T+${deployIndex.toFixed(1)}s)`;
-                paraEl.className = 'value warn'; // Indicates emergency
-            } else {
-                paraEl.innerText = `ARMED & SAFE`;
-                paraEl.className = 'value safe';
-            }
-
-            // Render Charts
-            buildFlightChart(labels, altitudes, velocities);
-            buildThrustChart(labels, requestedThrusts, actualThrusts);
-            buildStressChart(labels, gForces, drags);
-        }
-
-        function createGradient(ctx, colorStart, colorEnd) {
-            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, colorStart);
-            gradient.addColorStop(1, colorEnd);
-            return gradient;
-        }
-
-        function buildFlightChart(labels, altitudes, velocities) {
-            if (flightChart) flightChart.destroy();
-            const ctx = document.getElementById('flightProfileChart').getContext('2d');
-
-            flightChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Altitude (m)',
-                            data: altitudes,
-                            borderColor: '#38bdf8', // accent-blue
-                            backgroundColor: createGradient(ctx, 'rgba(56, 189, 248, 0.4)', 'rgba(56, 189, 248, 0.0)'),
-                            borderWidth: 3,
-                            pointRadius: 0,
-                            fill: true,
-                            tension: 0.4,
-                            yAxisID: 'y'
-                        },
-                        {
-                            label: 'Velocidade (m/s)',
-                            data: velocities,
-                            borderColor: '#c084fc', // accent-purple
-                            borderWidth: 2,
-                            pointRadius: 0,
-                            borderDash: [5, 5],
-                            tension: 0.4,
-                            yAxisID: 'y1'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: { mode: 'index', intersect: false },
-                    scales: {
-                        x: { grid: { color: 'rgba(255, 255, 255, 0.05)' } },
-                        y: {
-                            type: 'linear', display: true, position: 'left',
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            title: { display: true, text: 'Metros' }
-                        },
-                        y1: {
-                            type: 'linear', display: true, position: 'right',
-                            grid: { drawOnChartArea: false },
-                            title: { display: true, text: 'm/s' }
-                        }
-                    }
-                }
-            });
-        }
-
-        function buildThrustChart(labels, requested, actual) {
-            if (thrustChart) thrustChart.destroy();
-            const ctx = document.getElementById('thrustChart').getContext('2d');
-
-            thrustChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'PID Requisitado (N)',
-                            data: requested,
-                            borderColor: 'rgba(148, 163, 184, 0.5)',
-                            borderWidth: 2,
-                            borderDash: [3, 3],
-                            pointRadius: 0,
-                            stepped: 'middle'
-                        },
-                        {
-                            label: 'Real Engine Thrust (N)',
-                            data: actual,
-                            borderColor: '#fb7185', // accent-red
-                            backgroundColor: createGradient(ctx, 'rgba(251, 113, 133, 0.4)', 'rgba(251, 113, 133, 0.0)'),
-                            borderWidth: 3,
-                            pointRadius: 0,
-                            fill: true,
-                            tension: 0.4
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: { mode: 'index', intersect: false },
-                    plugins: {
-                        tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.raw} N` } }
-                    },
-                    scales: {
-                        x: { grid: { color: 'rgba(255, 255, 255, 0.05)' } },
-                        y: {
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            title: { display: true, text: 'Newtons (N)' }
-                        }
-                    }
-                }
-            });
-        }
-
-        function buildStressChart(labels, gForce, drag) {
-            if (stressChart) stressChart.destroy();
-            const ctx = document.getElementById('stressChart').getContext('2d');
-
-            stressChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'G-Force',
-                            data: gForce,
-                            borderColor: '#34d399', // accent-green
-                            borderWidth: 2,
-                            pointRadius: 0,
-                            tension: 0.4,
-                            yAxisID: 'y'
-                        },
-                        {
-                            label: 'Drag Aerodinâmico (N)',
-                            data: drag,
-                            borderColor: '#eab308', // yellow
-                            backgroundColor: 'rgba(234, 179, 8, 0.1)',
-                            borderWidth: 2,
-                            pointRadius: 0,
-                            fill: true,
-                            tension: 0.4,
-                            yAxisID: 'y1'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: { mode: 'index', intersect: false },
-                    scales: {
-                        x: { grid: { color: 'rgba(255, 255, 255, 0.05)' } },
-                        y: {
-                            type: 'linear', display: true, position: 'left',
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            title: { display: true, text: 'G' }
-                        },
-                        y1: {
-                            type: 'linear', display: true, position: 'right',
-                            grid: { drawOnChartArea: false },
-                            title: { display: true, text: 'Drag (N)' }
-                        }
-                    }
-                }
-            });
-        }
-    </script>
+            document.getElementById('mission-status').textContent = `✓ REPLAY COMPLETE — ${data.length} FRAMES`;
+            document.getElementById('mission-status').className = 'status-nominal';
+        };
+        reader.readAsText(file);
+    }
+</script>
 </body>
-
 </html>
