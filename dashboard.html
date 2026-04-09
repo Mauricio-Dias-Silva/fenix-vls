@@ -275,7 +275,7 @@
 <header>
     <div class="logo">
         <h1>FÊNIX VLS</h1>
-        <p>MISSION CONTROL · ZERO-POINT TELEMETRY</p>
+        <p>MISSION CONTROL · ZERO-POINT TELEMETRY · UNIVESP IC</p>
     </div>
     <div class="header-controls">
         <div class="launch-config">
@@ -288,9 +288,9 @@
                 <input type="number" id="cfg-dur" value="20" min="5" max="120">
             </div>
         </div>
-        <button class="btn btn-launch" id="btnLaunch" onclick="launchSimulation()">⚡ LAUNCH</button>
+        <button class="btn btn-launch" id="btnLaunch" onclick="launchSimulation()">LAUNCH SIMULATION</button>
         <div class="btn btn-upload">
-            📂 LOAD JSON
+            LOAD REPORT
             <input type="file" id="jsonUpload" accept=".json" onchange="loadJsonReport(event)">
         </div>
     </div>
@@ -336,7 +336,7 @@
 <div class="main-grid">
     <!-- Perfil de Voo LIVE -->
     <div class="card wide">
-        <h2>📡 Perfil de Voo em Tempo Real</h2>
+        <h2>FLIGHT PROFILE — REAL-TIME TELEMETRY</h2>
         <div class="chart-box">
             <canvas id="flightChart"></canvas>
         </div>
@@ -344,7 +344,7 @@
 
     <!-- Empuxo -->
     <div class="card">
-        <h2>🔥 Dinâmica de Propulsão</h2>
+        <h2>PROPULSION DYNAMICS — EDF THRUST ANALYSIS</h2>
         <div class="chart-box">
             <canvas id="thrustChart"></canvas>
         </div>
@@ -352,7 +352,7 @@
 
     <!-- G-Force -->
     <div class="card">
-        <h2>⚙️ Esforço Estrutural</h2>
+        <h2>STRUCTURAL STRESS — G-FORCE & AERODYNAMIC DRAG</h2>
         <div class="chart-box">
             <canvas id="stressChart"></canvas>
         </div>
@@ -360,13 +360,13 @@
 
     <!-- Foguete animado -->
     <div class="card" id="rocket-canvas-card">
-        <h2>🚀 Visualização de Voo</h2>
+        <h2>FLIGHT VISUALIZATION — DIGITAL TWIN</h2>
         <canvas id="rocket-canvas"></canvas>
     </div>
 
     <!-- BCI / Neural Link -->
     <div class="card">
-        <h2>🧠 Neural BCI — Q-Drive Coherence</h2>
+        <h2>NEURAL LINK — BCI Q-DRIVE COHERENCE MONITOR</h2>
         <div style="margin-top:8px;">
             <div style="font-size:0.75rem; color:var(--muted); margin-bottom:8px;">COERÊNCIA MÉDIA (Moving Avg.)</div>
             <div class="wave-bar"><div class="wave-fill" id="bci-bar" style="width:0%;background:var(--purple);"></div></div>
@@ -386,7 +386,7 @@
 
     <!-- Log de Eventos -->
     <div class="card">
-        <h2>📋 Event Log</h2>
+        <h2>MISSION EVENT LOG</h2>
         <div id="event-log"></div>
     </div>
 </div>
