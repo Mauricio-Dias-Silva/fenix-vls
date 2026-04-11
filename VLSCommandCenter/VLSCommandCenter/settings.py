@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core_vls',
-]
+    # Missing closing bracket for stress test
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
